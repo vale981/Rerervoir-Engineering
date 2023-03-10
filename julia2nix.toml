@@ -1,0 +1,66 @@
+
+[depot.x86_64-linux.fetchzip.registry-General]
+name = "registries/General"
+sha256 = "sha256-0xQHwnTY5lr5rLOXQnqypZSsTkn2PhIONwACtVFQrm8="
+stripRoot = false
+url = "https://pkg.julialang.org/registry/23338594-aafe-5451-b93e-139f81909106/736a3c42e9f3ac9d211e808754d3327a7545cad0#registry.tar.gz"
+
+[depot.x86_64-linux.fetchgit.package-Scratch]
+name = "packages/Scratch/sJlYg"
+sha256 = "sha256-RB0fLM1C2Kt/XONqCk3k02bmuXdyPQeBnMeF3msyQnI="
+rev = "30449ee12237627992a99d5e30ae63e4d78cd24a"
+url = "https://github.com/JuliaPackaging/Scratch.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-OrderedCollections]
+name = "packages/OrderedCollections/PRayh"
+sha256 = "sha256-jkM6lAXu8+UnsrzYeCI4GqT/YpvRBxB+xvejO3dlXUk="
+rev = "85f8e6578bf1f9ee0d11e7bb1b1456435479d47c"
+url = "https://github.com/JuliaCollections/OrderedCollections.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-TranscodingStreams]
+name = "packages/TranscodingStreams/MQucZ"
+sha256 = "sha256-IoN0TBm4Y77Q+6VOvUwfWknQiI+pgWuubQrxDZMzPow="
+rev = "94f38103c984f89cf77c402f2a68dbd870f8165f"
+url = "https://github.com/JuliaIO/TranscodingStreams.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-UnPack]
+name = "packages/UnPack/EkESO"
+sha256 = "sha256-Suhbh9wtRP9yvrZ0CSLd3LF8AISfZUDhti1+cfoN2xg="
+rev = "387c1f73762231e86e0c9c5443ce3b4a0a9a0c2b"
+url = "https://github.com/mauro3/UnPack.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-DrWatson]
+name = "packages/DrWatson/JACNB"
+sha256 = "sha256-XAQNEDDKdJpBT53l3oqqX61D8iAbuEO+QmOhzxaUvgo="
+rev = "7cddb9062eeb01edd43f23a0cf75eb80bf3288e6"
+url = "https://github.com/JuliaDynamics/DrWatson.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-MacroTools]
+name = "packages/MacroTools/qijNY"
+sha256 = "sha256-qOuK1Ac2jb1yH6g/5kLuHTENnx8rvp9Cz+VLjKH5Zog="
+rev = "42324d08725e200c23d4dfb549e0d5d89dede2d2"
+url = "https://github.com/FluxML/MacroTools.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-Requires]
+name = "packages/Requires/Z8rfN"
+sha256 = "sha256-1Q47dgeivDgWcXvqby+oyAGg+YrEubYoAAWrE9zRuD4="
+rev = "838a3a4188e2ded87a4f9f184b4b0d78a1e91cb7"
+url = "https://github.com/JuliaPackaging/Requires.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-Reexport]
+name = "packages/Reexport/OxbHO"
+sha256 = "sha256-jle1YBDjUkczbAjSbp49wmgo9ucVVV5YacwG4AwuzkY="
+rev = "45e428421666073eab6f2da5c9d310d99bb12f9b"
+url = "https://github.com/simonster/Reexport.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-FileIO]
+name = "packages/FileIO/aP78L"
+sha256 = "sha256-HyHIEnq4NnHhhkkBdJf9yqdqjd7JBk3CbReDDixASqQ="
+rev = "7be5f99f7d15578798f338f5433b6c432ea8037b"
+url = "https://github.com/JuliaIO/FileIO.jl.git"
+
+[depot.x86_64-linux.fetchgit.package-JLD2]
+name = "packages/JLD2/ryhNR"
+sha256 = "sha256-epfUw1T9ezuNM94Yd90b97/qVel9QfHc6hXYtNtw8as="
+rev = "42c17b18ced77ff0be65957a591d34f4ed57c631"
+url = "https://github.com/JuliaIO/JLD2.jl.git"
