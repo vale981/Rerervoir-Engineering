@@ -1,0 +1,179 @@
+\ProvidesPackage{hiromacros}
+\RequirePackage{ifdraft}
+
+% Macros
+
+%% qqgg
+\newcommand{\qqgg}[0]{q\bar{q}\rightarrow\gamma\gamma}
+
+%% ppgg
+\newcommand{\ppgg}[0]{pp\rightarrow\gamma\gamma}
+
+%% Momenta and Polarization Vectors convenience
+\DeclareMathOperator{\ps}{\slashed{p}}
+
+\DeclareMathOperator{\pe}{\varepsilon}
+\DeclareMathOperator{\pes}{\slashed{\pe}}
+
+\DeclareMathOperator{\pse}{\varepsilon^{*}}
+\DeclareMathOperator{\pses}{\slashed{\pe}^{*}}
+
+%% Spinor convenience
+\DeclareMathOperator{\us}{u}
+\DeclareMathOperator{\usb}{\bar{u}}
+
+\DeclareMathOperator{\vs}{v}
+\DeclareMathOperator*{\vsb}{\overline{v}}
+
+%% Center of Mass energy
+\DeclareMathOperator{\ecm}{E_{\text{CM}}}
+
+%% area hyperbolicus
+\DeclareMathOperator{\artanh}{artanh}
+\DeclareMathOperator{\arcosh}{arcosh}
+
+%% rectangle
+\DeclareMathOperator{\rect}{rect}
+
+%% sinc
+\DeclareMathOperator{\sinc}{sinc}
+
+%% sign
+\DeclareMathOperator{\sgn}{sgn}
+
+
+%% Fast Slash
+\let\sl\slashed
+
+%% hermitian/complex conjugate
+\newcommand{\cc}{\ensuremath{\mathrm{c.c.}}}
+\newcommand{\hc}{\ensuremath{\mathrm{h.c.}}}
+
+%% eulers number
+\def\eu{\ensuremath{\operatorname{e}}}
+
+%% Notes on Equations
+\newcommand{\shorteqnote}[1]{ &  & \text{\small\llap{#1}}}
+
+%% Typewriter Macros
+\newcommand{\sherpa}{\texttt{Sherpa}}
+\newcommand{\rivet}{\texttt{Rivet}}
+\newcommand{\vegas}{\texttt{VEGAS}}
+\newcommand{\lhapdf}{\texttt{LHAPDF6}}
+\newcommand{\scipy}{\texttt{scipy}}
+
+%% Sherpa Versions
+\newcommand{\oldsherpa}{\texttt{2.2.10}}
+\newcommand{\newsherpa}{\texttt{3.0.0} (unreleased)}
+
+%% Special Names
+\newcommand{\lhc}{\emph{LHC}}
+
+%% Expected Value and Variance
+\newcommand{\EX}[1]{\operatorname{E}\qty[#1]}
+\newcommand{\VAR}[1]{\operatorname{VAR}\qty[#1]}
+
+%% Uppercase Rho
+\newcommand{\Rho}{P}
+
+%% Transverse Momentum
+\newcommand{\pt}[0]{p_\mathrm{T}}
+
+%% Sign Function
+\DeclareMathOperator{\sign}{sgn}
+
+%% Stages
+\newcommand{\stone}{\texttt{LO}}
+\newcommand{\sttwo}{\texttt{LO+PS}}
+\newcommand{\stthree}{\texttt{LO+PS+pT}}
+\newcommand{\stfour}{\texttt{LO+PS+pT+Hadr.}}
+\newcommand{\stfive}{\texttt{LO+PS+pT+Hadr.+MI}}
+
+%% GeV
+\newcommand{\gev}[1]{\SI{#1}{\giga\electronvolt}}
+
+\def\iu{\ensuremath{𝑖}}
+\def\i{\iu}
+\def\id{\ensuremath{\mathbb{1}}}
+\def\NN{\ensuremath{\mathbb{N}}}
+\def\RR{\ensuremath{\mathbb{R}}}
+\def\CC{\ensuremath{\mathbb{C}}}
+\def\ZZ{\ensuremath{\mathbb{Z}}}
+\def\dim{\ensuremath{\operatorname{dim}}}
+\def\hilb{\ensuremath{\mathcal{H}}}
+
+% fixme
+\newcommand{\fixme}[1]{\marginpar{\tiny\textcolor{red}{#1}}}
+
+% HOPS/NMQSD
+\def\sys{\ensuremath{\mathrm{S}}}
+\def\bath{\ensuremath{\mathrm{B}}}
+\def\inter{\ensuremath{\mathrm{I}}}
+\def\nth{\ensuremath{^{(n)}}}
+\def\target{\ensuremath{\mathrm{target}}}
+\def\eff{\ensuremath{\mathrm{eff}}}
+
+\newcommand{\mat}[1]{\ensuremath{{\underline{\vb{#1}}}}}
+\def\kmat{{\mat{k}}}
+
+
+% Thermo
+\newcommand{\ergo}[1]{\ensuremath{\mathcal{W}\qty[#1]}}
+\newcommand{\qrelent}[2]{\ensuremath{S\qty(#1\,\middle|\middle|\,#2)}}
+\newcommand{\cyc}{\ensuremath{\mathrm{cyc}}}
+
+\makeatletter
+\newsavebox\myboxA
+\newsavebox\myboxB
+\newlength\mylenA
+
+\newcommand*\xoverline[2][0.75]{%
+    \sbox{\myboxA}{$\m@th#2$}%
+    \setbox\myboxB\null% Phantom box
+    \ht\myboxB=\ht\myboxA%
+    \dp\myboxB=\dp\myboxA%
+    \wd\myboxB=#1\wd\myboxA% Scale phantom
+    \sbox\myboxB{$\m@th\overline{\copy\myboxB}$}%  Overlined phantom
+    \setlength\mylenA{\the\wd\myboxA}%   calc width diff
+    \addtolength\mylenA{-\the\wd\myboxB}%
+    \ifdim\wd\myboxB<\wd\myboxA%
+       \rlap{\hskip 0.5\mylenA\usebox\myboxB}{\usebox\myboxA}%
+    \else
+        \hskip -0.5\mylenA\rlap{\usebox\myboxA}{\hskip 0.5\mylenA\usebox\myboxB}%
+    \fi}
+\makeatother
+
+\DeclareMathOperator{\bosedist}{\xoverline{n}}
+\DeclareDocumentCommand\bose{}{\opbraces{\bosedist}}
+
+%% Including plots
+% \newcommand{\plot}[1]{%
+% \ifdraft{\includegraphics[draft=false]{./figs/#1.pdf}}{\input{./figs/#1.pgf}}}
+\newcommand{\plot}[1]{%
+  \includegraphics[draft=false]{./figs/#1.pdf}}
+\newcommand{\tval}[1]{{\input{./values/#1.tex}}}
+
+%% citing "in ref"
+\NewBibliographyString{refname}
+\NewBibliographyString{refsname}
+\DefineBibliographyStrings{english}{%
+  refname = {Ref\adddot},
+  refsname = {Refs\adddot}
+}
+
+\DeclareCiteCommand{\refcite}
+  {%
+  \ifnum\thecitetotal=1
+    \bibstring{refname}%
+  \else%
+    \bibstring{refsname}%
+  \fi%
+  \addspace\bibopenbracket%
+  \usebibmacro{cite:init}%
+   \usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite:comp}}
+  {}
+  {\usebibmacro{cite:dump}%
+   \usebibmacro{postnote}%
+   \bibclosebracket}

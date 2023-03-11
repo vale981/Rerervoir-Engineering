@@ -1,0 +1,552 @@
+\documentclass[fontsize=10pt,paper=a4,open=any,
+twoside=no,toc=listof,toc=bibliography,headings=optiontohead,
+captions=nooneline,captions=tableabove,english,DIV=15,numbers=noenddot,final,parskip=half-,
+headinclude=true,footinclude=false,BCOR=0mm]{scrartcl}
+\pdfvariable suppressoptionalinfo 512\relax
+\synctex=1
+
+\usepackage{hirostyle}
+\usepackage{hiromacros}
+\addbibresource{references.bib}
+
+\title{Report on the Reservoir Engineering Efforts}
+\date{2023}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Equations of Motion for a Modulated Fiber Loop}
+\label{sec:equat-moti-modul}
+\subsection{Introduction}
+\label{sec:introduction}
+To obtain an equation of motion for the electric field that can be
+interpreted as a Hamiltonian, we have to reduce the wave equation to
+first order in time. Here we work with the paraxial approximation,
+ignoring any transverse fields. A more rigorous treatment, to be used
+in numeric simulations, can be derived from wave guide theory as
+in~\refcite{Yuan2018a,Haus1984}.
+
+We ultimately want to treat a ring modulator with a space and time
+dependent refractive index \(n = n_{0} + n_{1}(\vb{r}, t)\) with
+\(n_{1}\ll n_{0}\). This situation is close to the case where
+\(n_{1}=0\) where the wave equation can be solved by a plane-wave
+ansatz.
+
+To capture near-adiabatic deviations from these solutions, we split off
+the fast time evolution of the electric field
+\begin{equation}
+  \label{eq:1}
+  \vb{E}(\vb{r}, t) = \vb{E}_{0}(\vb{r}, t) \eu^{-\i ω t},
+\end{equation}
+where \(ω\) is as yet undetermined. Now, we \emph{assume} that
+\(\dot{\vb{E}}_{0}\sim Ω \cdot\vb{E}_{0}\) with a characteristic
+frequency \(Ω \ll ω\). This assumption will have to be verified in the
+final result to guarantee consistency. We define the small parameter
+\(δ = \frac{Ω}{ω} \ll 1\) for convenience.
+
+For our purposes the magnetic permeability is constant \(μ=μ_{0}\),
+whereas the permittivity \(ε(\vb{r}, t)\) is time dependent with
+\(\dot{ε} \sim Ω ε\). As we are not taking spatial derivatives of
+\(ε\), the spatial argument will be suppressed in the following.
+
+The electric field is real valued, although we do not explicitly take
+the real part for now.
+
+\subsection{A Perturbative Maxwell Equation for a Slowy Changing
+  Envelope}
+\label{sec:pert-maxw-equat}
+Applying a second curl to the Maxwell equation\footnote{Which is the
+  canonical way to derive the wave equation.} \(\nabla \times\vb{E} =
+- ∂_{t}\vb{{B}}\) leads to
+\begin{equation}
+  \label{eq:2}
+  \begin{aligned}
+    \nabla \times (\nabla \times \vb{E}) &= -{\nabla}^{2} \vb{E} =
+    -∂_{t}\bqty{\mu ∂_{t}\pqty{ε\vb{E}}}=-\mu\pqty{\ddot{ε} \vb{E} + 2
+                                           \dot{ε}\dot{\vb{E}} + ε \ddot{\vb{E}}} \\
+    &= -μ ω^{2} \bqty{\underbrace{-ε\vb{E}_{0}}_{\sim δ^{0}} + \underbrace{2 \frac{\dot{ε}}{ω}
+      \vb{E}_{0} -
+      2\iu \frac{ε}{ω}\dot{\vb{E}}_{0}}_{\sim δ^{1}} + \underbrace{2 \frac{\dot{ε}}{ω^{2}}
+      \dot{\vb{E}}_{0} + \frac{ε}{ω^{2}}\ddot{\vb{E}}_{0}}_{\sim δ^{2}}}\eu^{-\iu ω t}
+  \end{aligned}
+\end{equation}
+
+Up to this point we have not made any approximation. We now proceed to
+drop the terms of second order in \(δ\).
+
+This leaves us with
+\begin{equation}
+  \label{eq:3}
+  \nabla^{2}\vb{E}_{0} = μ ω^{2} \bqty{\pqty{\frac{2\dot{ε}}{ω} - ε}
+    \vb{E}_{0} - \frac{2 \iu ε}{ω} \dot{\vb{E}}_{0}} = \frac{n^{2} ω^{2}}{c^{2}} \bqty{\pqty{\frac{4\dot{n}}{nω} - 1}
+    \vb{E}_{0} - \frac{2 \iu }{ω} \dot{\vb{E}}_{0}},
+\end{equation}
+with \(n=\sqrt{ε μ} c\) which can be rearranged into a form that resembles the
+Schr\"odinger equation
+\begin{equation}
+  \label{eq:4}
+  \iu ∂_{t}\vb{E}_{0} =  - \frac{c^{2}}{2 n^{2} ω} \nabla^{2}\vb{E}_{0} +
+  \frac{1}{2}\pqty{\frac{4\dot{n}}{n}-ω}
+  \vb{E}_{0}.
+\end{equation}
+Note however, that the ``mass'' \(ωn^{2}/c^{2}\) in the kinetic term is not
+constant, giving rise to non hermitian dynamics. This is an artifact
+of neglecting orders of \(δ\). We will find however, that in the
+situation investigated in \cref{sec:modul-small-port} the violation of
+Hermiticity is negligible.
+
+In contrast to the result in \cite{Dutt2019}, \cref{eq:4} is still
+second order in space and, provided \(ε\) is real, hermitian.
+
+\subsection{Application to a Ring Resonator}
+\label{sec:appl-ring-reson}
+As we are describing a fiber ring of radius \(R\) it is convenient to
+work in cylindrical coordinates \((ρ, ϕ, z)\). We are interested in
+the electric field at the center of the fiber and assume that it does
+not vary much in the transversal directions. Thus, we neglect the
+dependence of the field on the \(z\) and \(ρ\) directions and make an
+ansatz \(\vb{E}_{0} = E(ϕ, t, ρ=R)\hat{\vb{z}}\).
+
+To satisfy the boundary condition \(E(t, 0) = E(t, 2π)\) \(\forall
+t\), we expand the field into a Fourier series
+\begin{equation}
+  \label{eq:6}
+  E(ϕ, t) = ∑_{m=-∞}^{+∞} C_{m} a_{m}(t) \eu^{\iu m ϕ},
+\end{equation}
+with \(C_{m}\) chosen appropriately later, so as to make the \(a_{m}\)
+dimensionless. Note that to obtain the \(a_{m}\) of \cite{Dutt2019}
+one has to make the substitution \(a_{m}(t) \to a_{-m}(t)\).
+
+In the case of a constant refractive index \(n_{0}\), the modes solve
+the ordinary wave equations so that
+\(a_{m}\sim \eu^{\iu (mϕ - ω_{m}t)}\) with\footnote{This also deviates
+  from \cite{Dutt2019}. There \(m\geq 0\) and also the negative \(ω\)
+  solutions are missing. One has to include either one or the other to
+  capture all solutions. The reason for this lies their explicit
+  construction of a real solution. However, the fact that frequencies
+  with a different sign relative to the wave vector exist is not
+  captured by their first order differential equation.}
+\(ω_{m} = \pm \frac{m c}{R n_{0}}\).  Applying the procedure of
+\cref{sec:pert-maxw-equat}, but to each of the mode amplitudes
+\(a_{m}=b_{m}\eu^{-\iu ω_{m}t}\) (with \(ω_{m}\) as yet unspecified)
+we find
+\begin{equation}
+  \label{eq:7}
+  \begin{aligned}
+    \frac{1}{R^{2}} ∑_{m=-∞}^{+∞} C_{m} b_{m}(t)\eu^{-iω_{m}t} ∂_{ϕ}^{2}\eu^{\iu m ϕ}
+    &=  \frac{-1}{R^{2}} ∑_{m=-∞}^{+∞} C_{m}m^{2} b_{m}(t) \eu^{\iu (m ϕ-ω_{m}t)}\\
+    &= ∑_{m=-∞}^{+∞}C_{m}\frac{n^{2} ω_{m}^{2}}{c^{2}} \bqty{\pqty{\frac{4\dot{n}}{nω_{m}} - 1}
+    b_{m}(t) - \frac{2 \iu }{ω_{m}} \dot{b}_{m}(t)}\eu^{\iu (m ϕ-ω_{m}t)}.
+  \end{aligned}
+\end{equation}
+
+In the limit \(\dot{n}\to 0 \implies n(ϕ,t) = n_{0}=\mathrm{const}\)
+we should recover \(\dot{b}_{m}=0\), which implies
+\begin{equation}
+  \label{eq:8}
+  ω_{m}^{2}=\pqty{\frac{mc}{Rn_{0}}}^{2} \implies ω_{m} = \pm
+  \abs{\frac{mc}{Rn_{0}}},
+\end{equation}
+which defines the \(ω_{m}\) in this case. However, to correctly
+determine the \(ω_{m}\), a slightly more delicate argument has to be
+made.
+
+
+Evaluating the \(∂_{ϕ}\) derivative, rearranging, applying
+\((2π)^{-1}\int_{0}^{2π}\dd{ϕ} \eu^{-\iu l ϕ}\) and defining \(n(ϕ,t)
+= n_{0} + n_{1}(ϕ, t)\) yields
+\begin{equation}
+  \label{eq:9}
+  \dot{b}_{l}=-\iu ∑_{m}\bqty{κ_{lm} + γ_{lm}}\eu^{-\iu (ω_{m}-ω_{l}) t}b_{m},
+\end{equation}
+with
+\begin{align}
+  κ_{lm}&= \frac{C_{m}}{4π
+          ω_{l}C_{l}}∫_{0}^{2π}\pqty{\frac{m^{2}c^{2}}{n^{2}R^{2}} - ω_{m}^{2}}\eu^{\iu(m-l) ϕ}\dd{ϕ}  \overset{\cref{eq:8}}{=}
+          A_{lm} ∫_{0}^{2π}\pqty{\frac{n_{0}^{2}}{n^{2}} - 1}\eu^{\iu(m-l)ϕ}\dd{ϕ}  \label{eq:10}\\
+  \label{eq:11}
+  γ_{lm}&= A_{lm}∫_{0}^{2π}\pqty{\frac{4\dot{n}(ϕ, t)}{ω_{m}n(ϕ,
+          t)}}\eu^{\iu(m-l) ϕ}\dd{ϕ}\\
+  \label{eq:12}
+  A_{lm}&=\frac{C_{m}ω_{m}^{2}}{4π
+          ω_{l}C_{l}}=\frac{1}{4π}\frac{C_{m}}{C_{l}}\frac{m^{2}}{l}\frac{c}{Rn_{0}} =\frac{1}{4π}\frac{C_{m}}{C_{l}}\frac{m^{2}}{l}Ω_{R}
+\end{align}
+which is a Sch\"odinger equation with the Hamiltonian
+\(H_{lm}=\bqty{κ_{lm} + γ_{lm}}\). The denominator of \cref{eq:12} may
+be cause for concern in the case that \(l=0\). This would imply
+\(ω_{l}=0\) which breaks our assumption \(δ\ll 1\). The sum over \(m\)
+in \cref{eq:6} should therefore exclude small \(m\).
+
+Note also that even in the \(\dot{n}=0\) case \cref{eq:10} does not
+vanish. The coupling of the modes originates from the (spatially
+modulated) deviation of \(n\) from \(n_{0}\). It is also clear, that
+the choice of \(n_{1}(ϕ,t)\) has to be made so that
+\(\int_{0}^{1}\abs{n_{0}^{2}/n_{1}^{2}-1}\dd{ϕ}\) is minimized to best
+approximate the condition \(δ\ll 1\) by minimizing \(κ_{lm}\) and
+justify the definition of the \(ω_{m}\). Remember that the \(ω_{m}\)
+are still free parameters and have to be chosen so that
+\({∂_{t}{b}_{m}}/{b_{m}}\sim δ \ll 1\).  In particular
+\(n_{1}(ϕ, t) = \mathrm{const}\) is not a valid choice. Preferably,
+one should define the \(ω_{m}\) to minimize the \(κ_{lm}\) in
+\cref{eq:10}. This also yields the exact solution in the
+\(n(ϕ,t)=\mathrm{const}\) case.
+
+For time independent \(n_{1}\) we can find suitable \(ω_{m}\) by
+minimizing
+\begin{equation}
+  \label{eq:15}
+  \bqty{∫_{0}^{2π}\pqty{\frac{m^{2}c^{2}}{n^{2}R^{2}} - ω_{m}^{2}}\dd{ϕ}}^{2}
+\end{equation}
+giving
+\begin{equation}
+  \label{eq:14}
+  ω_{m}^{2}= \frac{1}{2π} \frac{m^{2}c^{2}}{R^{2}} ∫_{0}^{2π}
+  n(ϕ)^{-2}\dd{ϕ}=\pqty{\frac{m c}{R n_{\mathrm{eff}}}}^{2},
+\end{equation}
+where \(n_{eff}^{-2}=(2π)^{-1}∫_{0}^{2π}n^{-2}\dd{ϕ}\). If \(n_{1}\)
+depends on time, one may use the long time average of \cref{eq:14}.
+
+
+\subsection{Modulation of a small portion of the ring.}
+\label{sec:modul-small-port}
+
+We now turn to the case of the modulation of a small angular portion
+\(ϕ_{W}\) of the ring. In such a case
+\begin{equation}
+  \label{eq:5}
+  n=n_{0}+n_{1}(t)\rect\pqty{\frac{ϕ}{ϕ_{W}}},
+\end{equation}
+where \(\rect(x)=Θ(1/4-x^{2})\) and \(Θ\) is the Heaviside step
+function. As the tangential components of the electric field are
+continuous, we face no problems on this front.
+
+If we further demand \(\abs{\max_{t} n_{1}(t)}\ll 1\) and \(\lim_{T\to
+∞} T^{-1} ∫_{0}^{T}n_{1}(t)\dd{t} = 0\) we can choose
+the \(ω_{n}\) as in \cref{eq:8}, as follows from \cref{eq:12}
+\begin{equation}
+  \label{eq:16}
+  ω_{m}^{2}=\lim_{T\to
+    ∞}\frac{1}{T}∫_{0}^{T}\frac{m^{2}c^{2}}{R^{2}}\bqty{\frac{1}{n_{0}^{2}}+ϕ_{W}\pqty{\frac{1}{n^{2}}-\frac{1}{n_{0}^{2}}}}\dd{t}
+  \approx \lim_{T\to
+    ∞}\frac{1}{T}∫_{0}^{T}\frac{m^{2}c^{2}}{R^{2}}\bqty{\frac{1}{n_{0}^{2}}
+    - 2ϕ_{W}\pqty{\frac{n_{1}(t)}{n_{0}}}}\dd{t} =\pqty{\frac{mc}{Rn_{0}}}^{2}.
+\end{equation}
+
+To connect to the result in \cite{Dutt2019}, we can then further
+evaluate \cref{eq:10}, using
+\(C_{m}=\sqrt{\frac{\hbar \abs{ω_{m}}}{4π R ε_{0}n_{0}^{2}}}\) to find
+\begin{equation}
+  \label{eq:17}
+  κ_{lm}=\frac{Ω_{R}ϕ_{W}\abs{l}^{-\frac{3}{2}}\abs{m}^{\frac{5}{2}}}{4π}
+  \pqty{\frac{n_{0}^{2}}{(n_{0}+n_{1}(t))^{2}}-1}\sinc\pqty{(m-l)\frac{ϕ_{W}}{2}}\sgn(l).
+\end{equation}
+
+Note that here, we introduced an additional sign compared to
+\cite{Dutt2019}, and we already transformed to a rotating frame.
+
+A slightly different choice of normalization
+\begin{equation}
+  \label{eq:13}
+  C_{m}=\frac{1}{m^{2}}\sqrt{\frac{\hbar \abs{ω_{m}}}{4π R
+      ε_{0}n_{0}^{2}}}
+\end{equation}
+makes \(κ_{lm}\) hermitian and reproduces the result of
+\cite{Dutt2019}
+\begin{equation}
+  \label{eq:18}
+  \begin{aligned}
+    κ_{lm}&=\frac{Ω_{R}ϕ_{W}\sqrt{ml}}{4π}
+            \pqty{\frac{n_{0}^{2}}{(n_{0}+n_{1}(t))^{2}}-1}\sinc\pqty{(m-l)\frac{ϕ_{W}}{2}}\sgn(l)\\
+    &\approx
+    \frac{Ω_{R}ϕ_{W}\sqrt{ml}}{2π}
+    \frac{n_{1}(t)}{n_{0}}\sinc\pqty{(m-l)\frac{ϕ_{W}}{2}}\sgn(l).
+  \end{aligned}
+\end{equation}
+
+As we are interested in the case where \(m,l\gg 1\) and
+\(m=M+δm\), \(l=M+δl\) with \(δm,δl\ll M\), the pre-factor of \(κ_{lm}\)
+can be regarded as constant either way, guaranteeing hermiticity.
+
+Note that compared to \cite{Dutt2019} we added an additional sign in
+\cref{eq:9} and swapped the index \(m,l\) with \(-m,-l\). This leads to
+\cref{eq:18} having the same sign as in this publication, rather than
+the opposite as one would expect from \cref{eq:9} alone.
+
+This constitutes a rigorous derivation of the result in that paper.
+
+
+Evaluating \cref{eq:11} yields
+\fixme{to be done}.
+
+\subsection{Open Questions}
+\label{sec:open-questions}
+
+It would be interesting to compute an explicit expression for the
+magnetic field as well. To do so would allow us to check the
+continuity for \(μ\vb{H}=\vb{B}\) and to compute the Poynting vector
+and give the modes a propagation direction. Of course this direction
+can be inferred from the \(n=n_{0}=\mathrm{const}\) case.
+
+It would also be of interest, to find out how good the paraxial
+approximation captures the real field at the center of the fiber.
+
+Lastly, the case of time independent \(n\) can likely be solved
+exactly fairly easily. It would be interesting to see how this
+solution relates to the equation found here.
+
+\section{Engineering Hamiltonians}
+\label{sec:engin-hamilt}
+
+Having obtained the basic equations of motion in
+\cref{sec:equat-moti-modul}, we now proceed to explore how to engineer
+model Hamiltonians out of this equation.
+
+\subsection{Notation and Preliminaries}
+\label{sec:notat-prel}
+
+
+Before we begin to detail procedures to obtain engineered
+Hamiltonians, a few notions concerning notation and the general
+assumptions will be introduced.
+
+On the physical level, we work with Fourier components \(b_{m}(t)
+\eu^{\iu (mϕ-ω_{m}t)}\) of
+the electric Field in the ring resonators in an appropriate frame.
+The amplitudes \(b_{m}\) can then be identified with a quantum state
+by defining
+\begin{equation}
+  \label{eq:19}
+  \ket{ψ} \equiv ∑_{m} b_{m}\ket{m}
+\end{equation}
+with \(\ket{m}\) being orthonormal unit vectors
+(\(\braket{m}{n}=δ_{mn}\)) in a Hilbert space \(\hilb\). This defines
+the fiducial basis in which the state can be measured by recording the
+slowly changing envelopes of the modes.
+
+In this language \cref{eq:9} (in the non-rotating frame) becomes
+\begin{equation}
+  \label{eq:20}
+  \iu ∂_{t}\ket{ψ} = H(t) \ket{ψ},
+\end{equation}
+with \(H_{mn}(t)= κ_{mn}(t)\eu^{-\iu{ω_{n}-ω_{m}}t}\) where we've neglected the \(γ_{mn}\)
+contribution from \cref{eq:11}. Let us also define
+\begin{equation}
+  \label{eq:21}
+  \begin{aligned}
+    [D(ω)]_{mn} &\equiv ω_{m} δ_{mn} & κ_{mn}(t) & \equiv Δ_{mn}
+                                                   \frac{n_{1}(t)}{n_{0}} \equiv Δ_{mn}\, f(t),
+  \end{aligned}
+\end{equation}
+where \(n(t) = n_{0} + n_{1}(t)\) with \(n_{1}\ll n_{0}\) as discussed
+in \cref{sec:modul-small-port}.
+
+The above may seem rather obvious, but a clarification of conventions
+is crucial.
+In that vein the Hamiltonian of \cref{eq:20} can be expressed as
+\begin{equation}
+  \label{eq:22}
+  H = H_{0} + V(t)
+\end{equation}
+with \(H_{0}=D(ω)\) and \(V(t)=Δ\, f(t)\).
+
+For practical reasons and in order for the assumptions of
+\cref{sec:pert-maxw-equat} to hold, we will always work with finite
+set of resonator modes, making our effective Hamiltonians finite
+dimensional. Further, it is assumed that we stimulate and modulate the
+system in such a way, that the boundary conditions in mode space are
+not important, so that they can be chosen at our convenience.  This
+means that we're only concerned with a finite subspace
+\(\hilb_{\mathrm{phys}} = \qty{\ket{m} \colon m\in
+  \bqty{{m_{0}-(N-1)/2},{m_{0} + (N-1)/2}}} \subset \hilb\).
+
+The goal is now to choose the geometry and the modulation so that
+the time evolution operator
+\begin{equation}
+  \label{eq:23}
+  \mathcal{U}_{t}[H] = \mathcal{T}\,\exp(-\iu ∫_{0}^{t}H(t))
+\end{equation}
+for the Hamiltonian \(H\) of \cref{eq:20} matches the time evolution
+operator for some reference Hamiltonian \(H_{\target}\)
+\begin{equation}
+  \label{eq:24}
+  \norm{\mathcal{U}_{t}[U H U^\dag]-\mathcal{U}_{t}[H_{\target}]} < ε
+  \iff \norm{\bqty{U_{t}[U H U^†]-U_{t}[H_{\target}]}\ket{ψ}} \leq ε.
+\end{equation}
+for \(0\leq t\leq T\), where \(\norm{\cdot}\) on the left side is the
+operator norm restricted \(\hilb_{\mathrm{phys}}\), \(U\) is some
+unitary and \(ε>0\). The unitary \(U\) is allowing for a basis change
+relative to the physical basis \cref{eq:19}. We require unitary
+equivalence with the same unitary for all times. As
+\(\mathcal{U}_{t}[H]\) is invertible, it would be trivial to achieve
+perfect equivalence using a time dependent unitary
+\begin{equation}
+  \label{eq:25}
+  U(t)=\mathcal{U}_{t}[H_{\target}] \mathcal{U}_{t}[H_{\target}]^†.
+\end{equation}
+
+As transformations into rotating frames are necessary we have to
+loosen the requirement and allow those transformations as well. These
+transformations then amount to considering oscillatory linear
+combinations of the oscillator mode amplitudes.
+
+This ``problem'' does not occur in \cite{Dutt2019}, as there the
+response to a certain input is measured, yielding a band
+structure. This requires the actual Floquet energies \emph{in the
+  rotating frame} to match the eigenenergies of the target
+Hamiltonian. But if observables such as the mean displacement of a
+walker such as in \refcite{Ricottone2020} are to be computed, the
+measured quantity should be the amplitudes, or equivalently the state
+\(\ket{ψ}\). These should be obtained directly using only simple
+transformations such linear combinations (constant unitaries) and
+translation of the signals in frequency space (rotating frame). For if
+we knew the detailed dynamics induced \(H_{target}\) already, there
+would be little point in trying to simulate them in the first place
+and using an elaborate transformation such as \cref{eq:25} would
+defeat the point.
+
+
+It is useful to express the above in terms of an effective Hamiltonian
+\begin{equation}
+  \label{eq:26}
+  H_{\eff}[H](t)\equiv \frac{1}{-\iu t} \log[U_{t}[H]].
+\end{equation}
+This Hamiltonian, similar to the Floquet Hamiltonian, has a spectrum
+limited by the branch cut of the complex logarithm, which however has
+no influence on the dynamics it generates. By continuity of the
+operator exponential the closeness
+\(\norm{H_{\eff}[H](t) -H_{\eff}[H_{\target}](t)}  \leq ε/t\) of the
+effective Hamiltonians implies the condition \cref{eq:24}. This
+representation lends itself particularly well to visualizations and
+numerical studies.
+
+If one is only interested in specific initial states, then one could
+specify the less strict requirement, that the evolution of these
+specific states should not deviate from the target.
+
+Another possibility to loosen restrictions would be to only demand the
+coincidence of the time evolution operators or the effective
+Hamiltonians for a specific time \(t\).
+
+\section{A Single Fiber Loop}
+\label{sec:single-fiber-loop}
+This section mostly follows~\refcite{Dutt2019}, focusing on how to
+engineer a one-dimensional tight-binding Hamiltonians with one orbital
+per unit cell,
+\begin{equation}
+  \label{eq:27}
+  H = ∑_{m,n=-M}^{M}t_{mn} \ketbra{m_{0}+m}{m_{0}+n}.
+\end{equation}
+
+There we employ periodic boundary conditions to simplify the
+calculations, so that \(\ket{m+N} = \ket{m}\) and
+\(t_{m,n}=\min_{l\in \ZZ}{\abs{m-n + l N}}\). Here, we choose
+\(N=2M +1\) for some \(M\in\NN\) and \(m_{0}\) so, that the relevant
+subspace \(\hilb_{phys}\) is contained in it so that states within
+this subspace don't ``see'' the boundary at the relevant time scales.
+
+
+\section{Measuring the State Amplitudes}
+\label{sec:meas-state-ampl}
+
+TBD
+
+\section{Motivational Issues}
+\label{sec:motiv-probl}
+
+\emph{This section reflects the personal thoughts of Valentin Boettcher and
+is correspondingly formulated in the first person.}
+
+Along with the issue concerning arbitrary unitary transformations on
+the amplitudes mentioned in \cref{sec:notat-prel}, I also wonder how
+we could consider the fiber loop experiment a ``realization'' of a
+certain model.
+
+In a puristic sense, it is of course. We have a system that follows
+dynamics induced by a linear differential equation resembling the
+Schr\"odinger equation. More to the point\footnote{In my eyes.} would
+be, to realize a quantum mechanical model in a \emph{physical quantum
+  mechanical system}. By this, I mean using a system whose dynamics
+are given by a Hamiltonian we know and can engineer, so that the
+measurement of its \emph{quantum state} matches our engineering
+goals. This has been done in \cite{Roushan2014} for example. The
+crucial difference to our fiber loop experiment is, that the actual
+physics taking place are quantum mechanical in nature. Each
+realization of a model in such a system would constitute a test of
+quantum mechanics and thus be of interest from a physical
+standpoint. It would also constitute a physical implementation of some
+(hopefully) interesting behavior, for example Mojorana modes, or
+super-conductivity, or some topological effects.
+
+One can of course interject now that light, or any physical system, is
+quantum mechanical in nature and by measuring the amplitude and phase
+of the resonator modes, we also perform a quantum measurement albeit
+neglecting the fluctuations. In that sense however, a numerical simulation
+would then also constitute an equally valid ``realization''.
+
+The one merit of the fiber loop setup (or any similar setup) that I
+can think of is then to solve problems that are not tractable
+analytically or numerically and that are nevertheless of practical
+interest. The main goal of this project in the short term should then
+be to identify such problems and asses them with respect to their
+eligibility for treatment using the analog computer.
+
+I must admit that this prospect seems daunting to me, as I'm lacking
+the experience in the field. This of-course is no reason to throw the
+towel. It just puts me off.
+
+Working on something that has some chance of turning out to be of no
+immediate practical use is also nothing that should frighten a
+physicist. The development of quantum mechanics itself answered an
+interesting physical questions and much later paid off by giving us
+the technology that enables the information age.
+
+Odd enough, I'm lacking the angle to find the question ``Can we coax
+the fiber loop setup into simulating the Hamiltonian \(H\)?''
+interesting. This is a subjective phenomenon, but how can't it be?  Of
+course, I can work on it and even achieve progress, but if work is all
+I wanted, I could become a programmer and earn a much better living.
+
+My mental machinery is easily blocked by doubt and anxiety. When I am
+sitting down to work I am constantly questioning whether I'm doing the
+right thing and that leads to situations in which I am too petrified
+to think properly or I am taking every opportunity to procrastinate
+(such as the Dresden Project and Course Work and Chatting with others
+or acquiring stuff on Kiji or dawdling in the morning).
+
+Also, I'm rather afraid to have to present my work in a motivated
+manner, e.g. for the prelims and in applications for scholarships.
+
+If this renders me unfit for the pursuit of a PhD in physics, then I
+am perfectly happy to accept that. I am not doing it for the title,
+but because I thought I would enjoy the experience.
+
+All this complaining is not very constructive, but I hope it
+illuminates how I feel and points a way towards the resolution of the
+issue.
+
+The next step after reaching the immediate goal of realizing the model
+in \refcite{Ricottone2020}, as mentioned above, is to be constructive
+and work on scoping out the future work to reduce the uncertainty. I
+am currently preparing a list of things that interest me along with
+reasons for that interest, but I'm not sure which of these things are
+open to me and in which context. Do they have to be related to the
+fiber loop setup? Do they have to be related to synthetic dimensions?
+What role do open systems play? My hope is that I can rely, at least
+in part, on the guidance of more qualified and experience persons to
+choose a research direction. Otherwise, the responsibility may be too
+much for me.
+
+I may also just be overlooking something that alleviates the issue
+discussed at the beginning, which would be the optimal situation.
+
+\printbibliography{}
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% TeX-output-dir: "output"
+%%% TeX-engine: luatex
+%%% End:
