@@ -65,7 +65,7 @@ end
 Returns the Floquet Hamiltonian for a Hamiltonain `H` that commutes
 with itself at different times.
 """
-function trivial_floquet_hamiltonian(H::Function, T::Real, restrict_energies::Bool=false)
+function trivial_floquet_hamiltonian(H::Function, T::Real, restrict_energies::Bool = false)
     function h_step!(dU, _, _, t)
         dU .= H(t)
     end
@@ -89,7 +89,7 @@ end
 
 
 struct KickOperator
-    U
+    U::Any
     H_F::Matrix
 
 

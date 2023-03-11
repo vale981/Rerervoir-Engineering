@@ -67,6 +67,12 @@
               package = julia-wrapped;
               help = julia2nix.packages.${pkgs.system}.julia_18-bin.meta.description;
             }
+
+            {
+              name = "push-looping";
+              command = "${pkgs.git}/bin/git subtree push --prefix=src/Looping/ looping main";
+              help = "Pushes the `Looping` subtree to the upstream repo.";
+            }
           ];
         };
       })

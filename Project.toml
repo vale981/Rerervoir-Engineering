@@ -3,6 +3,8 @@ authors = ["Valentin Boettcher"]
 
 [deps]
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+Looping = "5edfbbf5-67b9-46d9-8ca5-929143abcc11"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 
 [compat]
 DrWatson = "2.12.1"
