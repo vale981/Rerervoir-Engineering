@@ -22,7 +22,7 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
       - run: cd papers/Report
-      - run: nix build
+      - run: nix build .
       - run: cp result/index.pdf report.pdf
 
       - uses: actions/upload-artifact@v3

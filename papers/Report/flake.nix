@@ -21,17 +21,18 @@
       rec {
         packages = {
           document = pkgs.stdenvNoCC.mkDerivation rec {
-            name = "maxwell_time_scale_separation";
+            name = "reservoir_eng";
             src = self;
             buildInputs = [ pkgs.coreutils tex pkgs.biber ];
             phases = [ "unpackPhase" "buildPhase" "installPhase" ];
             buildPhase = ''
               export PATH="${pkgs.lib.makeBinPath buildInputs}";
+              cd papers/Report/
               mkdir -p .cache/texmf-var
               mkdir -p output/src
               env TEXMFHOME=.cache TEXMFVAR=.cache/texmf-var \
                  OSFONTDIR=${pkgs.tex-gyre-math.pagella}/share/fonts/opentype:${pkgs.gyre-fonts}/share/fonts:${pkgs.liberation_ttf}/share/fonts:${pkgs.lato}/share/fonts/lato:${pkgs.raleway}/share/fonts:${pkgs.lmodern}/share/fonts \
-                latexmk ./index.tex
+                latexmk index.tex
             '';
             installPhase = ''
               mkdir -p $out
