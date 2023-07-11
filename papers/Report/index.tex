@@ -5,9 +5,18 @@ headinclude=true,footinclude=false,BCOR=0mm]{scrartcl}
 \pdfvariable suppressoptionalinfo 512\relax
 \synctex=1
 
+
 \usepackage{hirostyle}
 \usepackage{hiromacros}
 \addbibresource{references.bib}
+\acsetup{
+  make-links = true ,
+  format = \emph ,
+  list / display = all ,
+  pages / display = all
+}
+\DeclareAcronym{mlong}{short=LTAD, long=long-time time-averaged mean displacement}
+\DeclareAcronym{rwa}{short=RWA, long=Rotating-Wave Approximation}
 
 \title{Report on the Reservoir Engineering Efforts}
 \date{2023}
@@ -146,7 +155,8 @@ we should recover \(\dot{b}_{m}=0\), which implies
 \begin{equation}
   \label{eq:8}
   ω_{m}^{2}=\pqty{\frac{mc}{Rn_{0}}}^{2} \implies ω_{m} = \pm
-  \abs{\frac{mc}{Rn_{0}}},
+  \abs{\frac{mc}{Rn_{0}}}= \pm
+  \abs{m Ω},
 \end{equation}
 which defines the \(ω_{m}\) in this case. However, to correctly
 determine the \(ω_{m}\), a slightly more delicate argument has to be
@@ -263,6 +273,8 @@ makes \(κ_{lm}\) hermitian and reproduces the result of
     \frac{n_{1}(t)}{n_{0}}\sinc\pqty{(m-l)\frac{ϕ_{W}}{2}}\sgn(l).
   \end{aligned}
 \end{equation}
+However, this normalization does not yield the correct creation and
+annihilation operators.
 
 As we are interested in the case where \(m,l\gg 1\) and
 \(m=M+δm\), \(l=M+δl\) with \(δm,δl\ll M\), the pre-factor of \(κ_{lm}\)
@@ -364,14 +376,14 @@ The goal is now to choose the geometry and the modulation so that
 the time evolution operator
 \begin{equation}
   \label{eq:23}
-  \mathcal{U}_{t}[H] = \mathcal{T}\,\exp(-\iu ∫_{0}^{t}H(t))
+  \tevop{H} = \mathcal{T}\,\exp(-\iu ∫_{0}^{t}H(t))
 \end{equation}
 for the Hamiltonian \(H\) of \cref{eq:20} matches the time evolution
 operator for some reference Hamiltonian \(H_{\target}\)
 \begin{equation}
   \label{eq:24}
-  \norm{\mathcal{U}_{t}[U H U^\dag]-\mathcal{U}_{t}[H_{\target}]} < ε
-  \iff \norm{\bqty{U_{t}[U H U^†]-U_{t}[H_{\target}]}\ket{ψ}} \leq ε.
+  \norm{\tevop{U H U^\dag}-\tevop{H_{\target}}} < ε
+  \iff \norm{\qty{\tevop{U H U^†}-\tevop{H_{\target}}}\ket{ψ}} \leq ε.
 \end{equation}
 for \(0\leq t\leq T\), where \(\norm{\cdot}\) on the left side is the
 operator norm restricted \(\hilb_{\mathrm{phys}}\), \(U\) is some
@@ -382,7 +394,7 @@ equivalence with the same unitary for all times. As
 perfect equivalence using a time dependent unitary
 \begin{equation}
   \label{eq:25}
-  U(t)=\mathcal{U}_{t}[H_{\target}] \mathcal{U}_{t}[H_{\target}]^†.
+  U(t)=\tevop{H_{\target}}\tevop{H_{\target}}^†.
 \end{equation}
 
 As transformations into rotating frames are necessary we have to
@@ -409,13 +421,13 @@ defeat the point.
 It is useful to express the above in terms of an effective Hamiltonian
 \begin{equation}
   \label{eq:26}
-  H_{\eff}[H](t)\equiv \frac{1}{-\iu t} \log[\mathcal{U}_{t}[H]].
+  \heff{H}\equiv \frac{1}{-\iu t} \log[\tevop{H}].
 \end{equation}
 This Hamiltonian, similar to the Floquet Hamiltonian, has a spectrum
 limited by the branch cut of the complex logarithm, which however has
 no influence on the dynamics it generates. By continuity of the
 operator exponential the closeness
-\(\norm{H_{\eff}[H](t) -H_{\eff}[H_{\target}](t)}  \leq ε/t\) of the
+\(\norm{\heff{H} -\heff{H_{\target}}}  \leq ε/t\) of the
 effective Hamiltonians implies the condition \cref{eq:24}. This
 representation lends itself particularly well to visualizations and
 numerical studies.
@@ -442,8 +454,82 @@ There we employ periodic boundary conditions to simplify the
 calculations, so that \(\ket{m+N} = \ket{m}\) and
 \(t_{m,n}=\min_{l\in \ZZ}{\abs{m-n + l N}}\). Here, we choose
 \(N=2M +1\) for some \(M\in\NN\) and \(m_{0}\) so, that the relevant
-subspace \(\hilb_{phys}\) is contained in it so that states within
+subspace \(\hilb_{\mathrm{phys}}\) is contained in it so that states within
 this subspace don't ``see'' the boundary at the relevant time scales.
+
+After transforming into a rotating frame with respect to the uncoupled
+modes of the ring, we obtain from \cref{eq:9} in the language of
+\cref{sec:notat-prel}
+\begin{equation}
+  \label{eq:28}
+  \begin{aligned}
+    H(t) &= \tilde{V}(t) & \pqty{\tilde{V}(t)}_{mn} =
+                           Δ_{{m_{0}+m},{m_{0}+n}} \,f(t) \eu^{-i(ω_{m_{0}+n}-ω_{m_{0}+m})t}.
+  \end{aligned}
+\end{equation}
+
+Neglecting dispersion and other constraints on the number of
+equidistant modes physically present in the fiber loop, we can assume
+that \cref{eq:28} represents our system, restricted to
+\(\hilb_{\mathrm{phys}}\) faithfully. We can then continue to note
+that \(ω_{m} = m Ω\) where \(Ω={{c}/{Rn_{0}}}\) is the free spectral
+range of the fiber loop. Further, as \(H_{mn}(t) = H_{m-n}(t)\) for
+\(m,n\) unrestricted\footnote{This is a choice of boundary condition
+  as explained in \cref{sec:notat-prel}. We assume that the states of
+  interest never venture outside of \(\hilb_{\mathrm{phys}}\).}
+implies that the Hamiltonian can be diagonalized by Fourier states
+\begin{equation}
+  \label{eq:30}
+  \ket{k} = \frac{1}{\sqrt{2π}}∑_{m} \eu^{\iu km}\ket{m},
+\end{equation}
+where \(k\in [-π,π]\).
+
+This Eigenbasis is independent in time making the Hamiltonian commute
+with itself at unequal times \(\comm{H(t)}{H(s)} = 0\, \forall t,s\),
+leading to a particularly simple form of the time evolution operator
+\begin{equation}
+  \label{eq:31}
+  \pqty{\tevop{H}}_{m,n} = \exp(-\iu  Δ_{{m_{0}+m},{m_{0}+n}} ∫_{0}^{t}
+  \,f(t) \eu^{-i(m-n)Ω t}\dd{t}).
+\end{equation}
+
+Assuming that \(f(t) = f(t+2π/Ω) = f(t+T)\) the corresponding Floquet
+Hamiltonian is
+\begin{equation}
+  \label{eq:29}
+  H_{F,mn} = \bqty{\heff[T]{H}}_{mn} = \frac{1}{T} Δ_{{m_{0}+m},{m_{0}+n}} ∫_{0}^{T}
+  \,f(t) \eu^{-i(m-n)Ω t}\dd{t} = Δ_{{m_{0}+m},{m_{0}+n}} c_{m-n},
+\end{equation}
+where \(c_{m-n}\) is the \((m-n)\)th (complex) Fourier coefficient of
+the drive
+\begin{equation}
+  \label{eq:33}
+  f(t) = ∑_{l\in \ZZ}\eu^{\iu l Ω t} c_{l}.
+\end{equation}
+This is a feature that may have been overlooked in
+\cite{Dutt2019}, as they only give a Floquet Hamiltonian in the \ac{rwa}.
+
+The Floquet theorem implies that \cref{eq:24} is valid once a period.
+
+To quantify the deviations from the Floquet dynamics \(\eu^{-\iu H_{F}
+  t}\) within each period \(T\), we consider the ``Kick Operator'' \cite{Viebahn}
+\begin{equation}
+  \label{eq:32}
+  \eu^{-i K(t)} = \tevop{H}\eu^{\iu H_{F} t},
+\end{equation}
+so that \(\ket{ψ(t)} = \eu^{-i K(t)}\eu^{-\iu H_{F} t}\ket{ψ(0)}\)
+with the property \(K(t+T)=K(t)\) and \(K(0)=K(nT)=0\).
+
+In the present we have
+\begin{equation}
+  \label{eq:34}
+  K_{mn}
+\end{equation}
+
+
+If we additionally demand that \(Ω\gg Δ_{m,n}f(t)\) we find that
+the kick operator
+
 
 
 \section{Measuring the State Amplitudes}
@@ -451,7 +537,184 @@ this subspace don't ``see'' the boundary at the relevant time scales.
 
 TBD
 
+\section{The non-Markovian Quantum Walk for Finite Baths}
+\label{sec:non-mark-quant}
+
+We will discuss how the behavior of the model introduced in
+\refcite{Ricottone2020} for the limit of weak coupling and an infinite
+bath may be reproduced with both finite coupling strength and a finite
+number of bath levels.
+
+The model Hamiltonian is that of an SSH-Chain~\cite{Su1979} with a
+number of bath states coupled to each unit cell \(H=H_{A}+H_{\bar{A}}+V\)
+\begin{align}
+  \label{eq:36}
+  H_{A} &= ∑_{m}ω_{A} \ketbra{A,m} \\
+  H_{\bar{A}} &= Σ_{m}(ω_{A} + ω)\ketbra{B,m}+
+                   ∑_{j}\bqty{ω_{j}\ketbra{j, k} + g_{j}
+                   \pqty{\ketbra{j,m}{B,m} + \hc}}\\
+  V&=∑_{m} v\pqty{\ketbra{A,m}{B,m} + u\ketbra{A,m}{B,m+1} + \hc}
+\end{align}
+
+In momentum space, the model Hamiltonian takes the form \(H=H_{A}(k) +
+H_{\bar{A}}(k) + V(k)\) with
+\begin{align}
+  \label{eq:35}
+  H_{A}(k) &= ω_{A} \ketbra{A,k} \\
+  H_{\bar{A}}(k) &= (ω_{A} + ω)\ketbra{B,k}+
+                   ∑_{j}\bqty{ω_{j}\ketbra{j, k} + g_{j}
+                   \pqty{\ketbra{j,k}{B,k} + \hc}}\\
+  V(k)&=\abs{v(k)}\pqty{\eu^{\iu ϕ(k)}\ketbra{A,k}{B,k} + \hc}
+\end{align}
+with \(v(k) = \abs{v (1+u\eu^{\iu k})}\).
+
+Upon eliminating the \(B\) site from the above through a
+Schrieffer-Wolff transformation for \(ω\gg v(k)\), we end up with
+\begin{equation}
+  \label{eq:37}
+  H(k) = \tilde{ω}_{A} \ketbra{j,k} + ∑_{j} \bqty{\tilde{ω}_{j} \ketbra{j, k}
+    + \pqty{\tilde{η}_{j}\ketbra{A,k}{j,k} + \hc}},
+\end{equation}
+where the \(\tilde{η}_{j}(k) \sim \tilde{η}_{j}(0) v(k)\). The tildas
+signify quantities renormalized due to the Schrieffer-Wolff transform
+and will be dropped in the following.
+
+
+The \emph{mean displacement} is defined as
+\begin{equation}
+  \label{eq:38}
+  \ev{m(t)} \equiv ∑_{m}m \pqty{1-ρ_{A,m}}  = ∑_{m}m \pqty{1-\abs{\braket{A,m}{ψ(t)}}^{2}}
+\end{equation}
+where we consider the initial condition \(\ket{ψ(0)}=\ket{A,0}\) and
+define \(ρ_{A}(t)=\abs{\braket{A,m}{ψ(t)}}^{2}\) for convenience.
+
+As the quantity \(\ev{m(t)}\) can fluctuate in time and we will be
+interested in long-time beahavior, we additionally define
+\begin{equation}
+  \label{eq:39}
+  \ev{m} \equiv \lim_{T\to ∞} \frac{1}{T}∫_{0}^{T}\ev{m(t)} \dd{t}
+\end{equation}
+which we will refer to as \ac{mlong}.
+
+In momentum space this becomes
+\begin{equation}
+  \label{eq:40}
+  \ev{m} = ∫_{0}^{2π}(1-ρ_{A})\pdv{ϕ(k)}{k} \frac{\dd{k}}{2π}
+\end{equation}
+with
+\begin{equation}
+  \label{eq:41}
+  ρ_{A}(k) = \lim_{T\to ∞}\frac{1}{T} ∫_{0}^{T}ρ_{A}(t, k)\dd{t} = \lim_{T\to
+    ∞}\frac{1}{T} ∫_{0}^{T}\abs{\braket{A,k}{ψ(t)}}^{2}\dd{t}.
+\end{equation}
+
+\subsection{Born Approximation}
+\label{sec:born-approximation}
+
+In the limit of very weak coupling we can solve for \(ρ_{A}\) in terms
+of a non-Markovian master equation by employing perturbation theory to
+second order\footnote{Which is the first nontrivial order} in the
+coupling \(V\).
+\begin{equation}
+  \label{eq:42}
+  \dot{ρ}_{A}(k,t) = ∫_{0}^{t}Σ(k, t-t\prime) ρ_{A}(k, t\prime)
+\end{equation}
+with the self-energy
+\begin{equation}
+  \label{eq:43}
+  Σ(k,t)=-2 ∑_{j}\abs{η_{j}(k)}^{2}\cos(ω_{k}t)
+\end{equation}
+with \(j=\overline{1,N}\).
+
+We are interested in the long time average of \(ρ\) which can be
+expressed as
+\begin{equation}
+  \label{eq:44}
+  {ρ}_{A}(k)=\lim_{T\to
+    ∞}\frac{1}{T}∫_{0}^{∞}\eu^{-\frac{t}{T}}ρ_{A}(k,t)\dd{t} =
+  \lim_{s\to 0} s \tilde{ρ}_{A}(k, s) = \eval{\bqty{\dv{s} \frac{1}{\tilde{ρ}_{A}(k,s)}}^{-1}}_{s=0}
+\end{equation}
+where \(\tilde{ρ}_{A}({k, s})\) is the Laplace transform of \(ρ_{A}(k,
+t)\).
+
+The equation of motion \cref{eq:42} gives direct access to
+\(\tilde{ρ}_{A}\)
+\begin{equation}
+  \label{eq:45}
+  \tilde{ρ}_{A}({k, s}) = \frac{ρ_{A}(k,0)}{s - \tilde{Σ}(k, s)} = \frac{1}{s - \tilde{Σ}(k, s)},
+\end{equation}
+with
+\begin{equation}
+  \label{eq:46}
+  \tilde{Σ}(k, s) = -2 ∑_{j}\abs{η_{j}}^{2} \frac{s}{s^{2}+ω_{j}^{2}} =
+  -∑_{j}\abs{η_{j}}^{2} \bqty{\frac{1}{s+\iu ω_{j}} + \frac{1}{s-\iu
+      ω_{j}}}.
+\end{equation}
+
+Using \cref{eq:44}, this yields
+\begin{equation}
+  \label{eq:47}
+  ρ_{A}(k) = \frac{1}{1 + 2∑_{j}\frac{\abs{η_{j}}^{2}}{ω_{j}^{2}}} =
+  \frac{1}{1+2 U_{A}}.
+\end{equation}
+
+We now assume that the \(η_{j}\) are chosen so that in the continuum
+limit \(N\to ∞\)
+\begin{equation}
+  \label{eq:48}
+  ∫_{0}^{∞}f(ω)∑_{j}\abs{η_{j}}^{2} δ(ω-ω_{j})^{2}\dd{ω} =
+  ∫_{0}^{∞}J(ω) f(ω)
+\end{equation}
+for arbitrary (smooth) functions \(f\), where \(J\) is called the
+spectral density. We make the model assumption
+of an ohmic-type spectral density
+\begin{equation}
+  \label{eq:49}
+  J(ω) =g_{0}^{2}\frac{α+1}{ω_{c}^{α+1}}
+  \begin{dcases}
+    ω^{α} & \mathrm{if}\, ω \leq ω_{c},\\
+    0 & \mathrm{otherwise}.
+  \end{dcases}
+\end{equation}
+For \(α<(>)1\) this we call \(J\) a sub(super)-Ohmic spectral density,
+whereas for \(α=1\) we have an Ohmic spectral density.
+
+The \(ω_{j}\) and \(η_{j}\) may be chosen according to
+\cref{sec:discretization-bath}.
+
+In the continuum limit \(U_{A}\to ∞\) for \(α<=1\) and remains finite
+for \(α>1\), which leads to the \ac{mlong} \(\ev{m}\) having a sharp
+transition from \(0\) to \(1\) for \(α\leq 1\) which becomes washed
+out for \(α>1\).
+
+We wish to study how this limit is approached with a finite bath and
+in finite times. The born approximation requires that \(η\to 0\)
+sufficiently fast for \(N\to ∞\) so that the resulting long timescale is
+unlikely to be resolved experimentally.
+
+\section{Exact Solution}
+\label{sec:exact-solution}
+
+Numerics at finite coupling strengths suggest, that
+
+
+
+\newpage
+
+\subsection{Discretization of the Bath}
+\label{sec:discretization-bath}
+TBD
+
+\section{Ideas for Future Work}
+\label{sec:ideas-future-work}
+
+\begin{itemize}
+\item Using the Floquet picture to justify the RWA more
+  rigorously. (Magnus Expansion etc.)
+\end{itemize}
+
 \printbibliography{}
+\printacronyms{}
 \end{document}
 
 
